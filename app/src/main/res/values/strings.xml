@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">DAFPP-SUPERMARKET</string>
+    <string name="login">Login</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login_button">login_button</string>
+    <string name="Register">register</string>
+    <string name="already_have_an_account_login_here">Already have an account? Login Here</string>
+    <string name="select_a_branch_to_shop">Select a Branch to Shop:</string>
+    <string name="shop_at_nairobi_hq">Shop at Nairobi HQ</string>
+    <string name="shop_at_kisumu">Shop at Kisumu</string>
+    <string name="logout">Logout</string>
+    <string name="view_sales_reports">View Sales Reports</string>
+    <string name="restock_branches">Restock Branches</string>
+    <string name="welcome">Welcome</string>
+    <string name="enter_quantity_to_add">Enter Quantity to Add</string>
+    <string name="update_stock">Update Stock</string>
+    <string name="select_product">Select Product:</string>
+    <string name="select_branch">Select Branch:</string>
+    <string name="restock_inventory">Restock Inventory</string>
+</resources>

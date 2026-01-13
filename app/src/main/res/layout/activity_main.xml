@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"> <Button
+        android:id="@+id/btn_restock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restock_branches" />
+
+        <Button
+            android:id="@+id/btn_view_reports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view_sales_reports"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_customer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"> <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_a_branch_to_shop"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_shop_nairobi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shop_at_nairobi_hq" />
+
+        <Button
+            android:id="@+id/btn_shop_kisumu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shop_at_kisumu" />
+        <Button
+            android:id="@+id/btn_shop_mombasa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shop at Mombasa" />
+
+        <Button
+            android:id="@+id/btn_shop_nakuru"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shop at Nakuru" />
+
+        <Button
+            android:id="@+id/btn_shop_eldoret"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shop at Eldoret" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#FF0000"/>
+
+</LinearLayout>

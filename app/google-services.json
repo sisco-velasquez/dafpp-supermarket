@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1089179383780",
+    "project_id": "dafpp-supermarket",
+    "storage_bucket": "dafpp-supermarket.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089179383780:android:a5d2e2df7e88fcc9d7b9f1",
+        "android_client_info": {
+          "package_name": "com.example.dafpp_supermarket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGaHtTwlgB3ZD7lHBrkr4fxxgW9CTc3SA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
