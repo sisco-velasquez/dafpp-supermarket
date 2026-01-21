@@ -27,7 +27,7 @@ public class activity_shopping extends AppCompatActivity {
 
     TextView tvTitle, tvPrice, tvStock, tvSelectedLabel;
     ImageView imgPreviewLarge;
-    TextInputEditText etDestination, etPhone;
+    TextInputEditText etDestination, etPhone, etQuantity; // Added etQuantity
     Button btnBuy, btnTrack;
     LinearLayout cardCoke, cardFanta, cardSprite;
 
@@ -35,9 +35,9 @@ public class activity_shopping extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     String currentBranchId;
-    String selectedProduct = null; // CHANGE: Default is now null (No selection)
+    String selectedProduct = null;
     int currentStock = 0;
-    int currentPrice = 0;
+    int unitPrice = 0; // Renamed from currentPrice to unitPrice for clarity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +48,11 @@ public class activity_shopping extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentBranchId = getIntent().getStringExtra("BRANCH_ID");
 
-        // AUTH GUARD: Check if User is Logged In
+        // Auth Guard
         if (mAuth.getCurrentUser() == null) {
-            Toast.makeText(this, "You must be logged in to shop!", Toast.LENGTH_SHORT).show();
-            // Send back to Login Page
-            Intent intent = new Intent(this, Login.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
             finish();
-            return; // Stop running this activity
+            return;
         }
 
         // Initialize Views
@@ -65,91 +61,99 @@ public class activity_shopping extends AppCompatActivity {
         tvStock = findViewById(R.id.tv_stock_status);
         tvSelectedLabel = findViewById(R.id.tv_selected_label);
         imgPreviewLarge = findViewById(R.id.img_preview_large);
+
         etDestination = findViewById(R.id.et_destination);
         etPhone = findViewById(R.id.et_phone);
+        etQuantity = findViewById(R.id.et_quantity); // Link new input
+
         btnBuy = findViewById(R.id.btn_buy);
         btnTrack = findViewById(R.id.btn_track_orders);
+
         cardCoke = findViewById(R.id.card_coke);
         cardFanta = findViewById(R.id.card_fanta);
         cardSprite = findViewById(R.id.card_sprite);
 
         tvTitle.setText("Shopping at " + getBranchName(currentBranchId));
 
-        tvSelectedLabel.setText("Please select a drink above");
-        tvPrice.setText("");
-        tvStock.setText("");
-        btnBuy.setEnabled(false); // Disable button
-        btnBuy.setAlpha(0.5f);    // Make it look disabled (greyed out)
+        // Default State
+        tvSelectedLabel.setText("Please select a drink");
+        btnBuy.setEnabled(false);
+        btnBuy.setAlpha(0.5f);
 
-        // Set Click Listeners
+        // Click Listeners
         cardCoke.setOnClickListener(v -> selectProduct("Coke"));
         cardFanta.setOnClickListener(v -> selectProduct("Fanta"));
         cardSprite.setOnClickListener(v -> selectProduct("Sprite"));
 
-        // Buy Button Logic
+        // --- BUY BUTTON LOGIC (UPDATED) ---
         btnBuy.setOnClickListener(v -> {
-            // Extra safety check
-            if (selectedProduct == null) {
-                Toast.makeText(this, "Please select a product first", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (selectedProduct == null) return;
 
             String destination = etDestination.getText().toString();
-            String phoneNumber = etPhone.getText().toString().trim();
+            String phone = etPhone.getText().toString().trim();
+            String qtyStr = etQuantity.getText().toString().trim();
 
-            if (TextUtils.isEmpty(destination)) {
-                Toast.makeText(this, "Please enter a destination", Toast.LENGTH_SHORT).show();
+            // Validations
+            if (TextUtils.isEmpty(destination) || TextUtils.isEmpty(phone)) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (TextUtils.isEmpty(phoneNumber)) {
-                Toast.makeText(this, "Enter M-Pesa Phone Number", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(qtyStr)) {
+                Toast.makeText(this, "Enter Quantity", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Start Payment Flow
-            if (currentStock > 0) {
-                Toast.makeText(this, "Sending M-Pesa Request...", Toast.LENGTH_LONG).show();
+            // Parse Quantity
+            int quantityToBuy = Integer.parseInt(qtyStr);
+            if (quantityToBuy <= 0) {
+                Toast.makeText(this, "Quantity must be at least 1", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Check Stock
+            if (currentStock >= quantityToBuy) {
+                // Calculate Total Price
+                int totalAmount = unitPrice * quantityToBuy;
+
+                Toast.makeText(this, "Processing Ksh " + totalAmount + "...", Toast.LENGTH_LONG).show();
                 btnBuy.setEnabled(false);
 
+                // M-Pesa Trigger
                 DarajaApiClient daraja = new DarajaApiClient();
-                daraja.triggerStkPush(phoneNumber, currentPrice, new DarajaApiClient.MpesaListener() {
+                daraja.triggerStkPush(phone, totalAmount, new DarajaApiClient.MpesaListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(activity_shopping.this, "Enter PIN on your phone!", Toast.LENGTH_LONG).show();
-                        placeOrder(destination);
+                        Toast.makeText(activity_shopping.this, "Enter PIN on phone!", Toast.LENGTH_LONG).show();
+                        placeOrder(destination, quantityToBuy, totalAmount);
                         btnBuy.setEnabled(true);
                     }
+
                     @Override
                     public void onError(String error) {
                         Toast.makeText(activity_shopping.this, "Payment Failed: " + error, Toast.LENGTH_LONG).show();
                         btnBuy.setEnabled(true);
                     }
                 });
+
             } else {
-                Toast.makeText(this, "Out of Stock!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Only " + currentStock + " items left in stock!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnTrack.setOnClickListener(v -> {
-            Intent intent = new Intent(this, activity_order_tracking.class);
-            startActivity(intent);
-        });
+        btnTrack.setOnClickListener(v -> startActivity(new Intent(this, activity_order_tracking.class)));
     }
 
     private void selectProduct(String productName) {
         selectedProduct = productName;
         tvSelectedLabel.setText("Selected: " + productName);
-
-        // Enable the button now that a selection is made
         btnBuy.setEnabled(true);
         btnBuy.setAlpha(1.0f);
 
-        // Reset colors
+        // Visual Reset
         cardCoke.setBackgroundColor(Color.WHITE);
         cardFanta.setBackgroundColor(Color.WHITE);
         cardSprite.setBackgroundColor(Color.WHITE);
 
-        // Highlight selection
         if (productName.equals("Coke")) {
             cardCoke.setBackgroundColor(Color.parseColor("#FFEBEE"));
             imgPreviewLarge.setImageResource(R.drawable.coke);
@@ -160,7 +164,6 @@ public class activity_shopping extends AppCompatActivity {
             cardSprite.setBackgroundColor(Color.parseColor("#E8F5E9"));
             imgPreviewLarge.setImageResource(R.drawable.sprite);
         }
-
         fetchProductDetails();
     }
 
@@ -178,28 +181,33 @@ public class activity_shopping extends AppCompatActivity {
                         Long priceLong = doc.getLong("price");
 
                         currentStock = (stockLong != null) ? stockLong.intValue() : 0;
-                        currentPrice = (priceLong != null) ? priceLong.intValue() : 0;
+                        unitPrice = (priceLong != null) ? priceLong.intValue() : 0;
 
-                        tvPrice.setText("Price: Ksh " + currentPrice);
-                        tvStock.setText("Availability: " + currentStock + " items");
+                        tvPrice.setText("Price: Ksh " + unitPrice); // Show Unit Price
+                        tvStock.setText("Stock: " + currentStock);
                     } else {
                         currentStock = 0;
-                        tvPrice.setText("Availability: Not Stocked");
+                        tvPrice.setText("Not Stocked");
                     }
                 });
     }
 
-    private void placeOrder(String destination) {
+    private void placeOrder(String destination, int qty, int totalPay) {
         String productId = "product_" + selectedProduct.toLowerCase();
+
+        // 1. Decrement Stock by Quantity Purchased (Not just -1)
         db.collection("branches").document(currentBranchId)
                 .collection("inventory").document(productId)
-                .update("quantity", FieldValue.increment(-1));
+                .update("quantity", FieldValue.increment(-qty));
 
+        // 2. Save Order Details
         Map<String, Object> order = new HashMap<>();
         order.put("user_id", mAuth.getCurrentUser().getUid());
+        order.put("user_email", mAuth.getCurrentUser().getEmail());
         order.put("branch_id", currentBranchId);
         order.put("product", selectedProduct);
-        order.put("amount", currentPrice);
+        order.put("quantity", qty); // Save Quantity
+        order.put("amount", totalPay); // Save Total Amount Paid
         order.put("destination", destination);
         order.put("status", "Pending");
         order.put("date", new Date());
@@ -209,6 +217,7 @@ public class activity_shopping extends AppCompatActivity {
 
         Toast.makeText(this, "Order Placed Successfully!", Toast.LENGTH_LONG).show();
         etDestination.setText("");
+        etQuantity.setText("1"); // Reset quantity to 1
         fetchProductDetails();
     }
 

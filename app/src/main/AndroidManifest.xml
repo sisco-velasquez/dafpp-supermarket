@@ -14,11 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light">
         <activity
+            android:name=".activity_admin_orders"
+            android:exported="false" />
+
+        <activity
             android:name=".activity_report"
             android:exported="false" />
-        <activity
-            android:name=".DarajaApiClient"
-            android:exported="false" />
+
         <activity
             android:name=".activity_order_tracking"
             android:exported="false" />

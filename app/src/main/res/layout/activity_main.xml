@@ -28,6 +28,14 @@
         android:text="@string/restock_branches" />
 
         <Button
+            android:id="@+id/btn_manage_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manage Orders"
+            android:backgroundTint="#FF9800"
+            android:layout_marginTop="10dp"/>
+
+        <Button
             android:id="@+id/btn_view_reports"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

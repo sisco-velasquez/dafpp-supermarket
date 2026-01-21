@@ -55,8 +55,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // -----------------------------------------------------------
+        // ADMIN BUTTONS
+        // -----------------------------------------------------------
 
-        // Restock Button
+        // 1. Restock Button
         Button btnRestock = findViewById(R.id.btn_restock);
         btnRestock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //View Reports Button
+        // 2. View Reports Button
         Button btnReports = findViewById(R.id.btn_view_reports);
         btnReports.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,25 +79,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 3. Manage Orders Button (FIXED)
+        Button btnManageOrders = findViewById(R.id.btn_manage_orders);
+        if (btnManageOrders != null) {
+            btnManageOrders.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, activity_admin_orders.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
+        // -----------------------------------------------------------
+        // CUSTOMER BUTTONS
+        // -----------------------------------------------------------
 
-        //Find the buttons
         Button btnNairobi = findViewById(R.id.btn_shop_nairobi);
         Button btnKisumu = findViewById(R.id.btn_shop_kisumu);
         Button btnMombasa = findViewById(R.id.btn_shop_mombasa);
         Button btnNakuru = findViewById(R.id.btn_shop_nakuru);
         Button btnEldoret = findViewById(R.id.btn_shop_eldoret);
 
-        //Add Click Listeners
-        btnNairobi.setOnClickListener(v -> openShopping("branch_nairobi_hq"));
-        btnKisumu.setOnClickListener(v -> openShopping("branch_kisumu"));
-        btnMombasa.setOnClickListener(v -> openShopping("branch_mombasa"));
-        btnNakuru.setOnClickListener(v -> openShopping("branch_nakuru"));
-        btnEldoret.setOnClickListener(v -> openShopping("branch_eldoret"));
+        // Add Click Listeners (Using helper method)
+        if (btnNairobi != null) btnNairobi.setOnClickListener(v -> openShopping("branch_nairobi_hq"));
+        if (btnKisumu != null) btnKisumu.setOnClickListener(v -> openShopping("branch_kisumu"));
+        if (btnMombasa != null) btnMombasa.setOnClickListener(v -> openShopping("branch_mombasa"));
+        if (btnNakuru != null) btnNakuru.setOnClickListener(v -> openShopping("branch_nakuru"));
+        if (btnEldoret != null) btnEldoret.setOnClickListener(v -> openShopping("branch_eldoret"));
     }
 
-
-    // Opens the Shopping page and tells it which branch to load
+    // Helper: Opens the Shopping page and tells it which branch to load
     private void openShopping(String branchId) {
         Intent intent = new Intent(MainActivity.this, activity_shopping.class);
         intent.putExtra("BRANCH_ID", branchId);
