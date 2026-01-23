@@ -85,7 +85,7 @@ public class activity_shopping extends AppCompatActivity {
         cardFanta.setOnClickListener(v -> selectProduct("Fanta"));
         cardSprite.setOnClickListener(v -> selectProduct("Sprite"));
 
-        // --- BUY BUTTON LOGIC (UPDATED) ---
+        // --- buy button logic ---
         btnBuy.setOnClickListener(v -> {
             if (selectedProduct == null) return;
 

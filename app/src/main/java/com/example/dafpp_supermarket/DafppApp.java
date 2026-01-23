@@ -8,6 +8,7 @@ import android.app.Activity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+//allows it to "spy" on every single screen in the app
 public class DafppApp extends Application implements Application.ActivityLifecycleCallbacks {
 
     // UPDATE: 1 Hour in milliseconds (1 * 60 * 60 * 1000)
@@ -38,14 +39,14 @@ public class DafppApp extends Application implements Application.ActivityLifecyc
             saveExitTime();
         }
     }
-
+//saves the exact millisecond the user left
     private void saveExitTime() {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong("last_exit_time", System.currentTimeMillis());
         editor.apply();
     }
-
+// when user comes back this method runs
     private void checkTimeout(Activity activity) {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         long lastExitTime = prefs.getLong("last_exit_time", 0);

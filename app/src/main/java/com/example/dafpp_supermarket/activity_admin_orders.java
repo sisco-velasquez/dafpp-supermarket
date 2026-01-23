@@ -42,9 +42,7 @@ public class activity_admin_orders extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Add a Header "Manage Orders" back manually if needed,
-                        // or rely on XML static header (if your XML container is separate).
-                        // Here we just append cards.
+
                         for (DocumentSnapshot doc : task.getResult()) {
                             addOrderCard(doc);
                         }

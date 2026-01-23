@@ -22,15 +22,15 @@ import java.io.OutputStream;
 
 public class activity_report extends AppCompatActivity {
 
-    // 1. Nairobi Views
+    //  Nairobi Views
     TextView tvNaiCoke, tvNaiFanta, tvNaiSprite, tvNaiTotal;
-    // 2. Kisumu Views
+    // Kisumu Views
     TextView tvKisCoke, tvKisFanta, tvKisSprite, tvKisTotal;
-    // 3. Mombasa Views
+    // Mombasa Views
     TextView tvMomCoke, tvMomFanta, tvMomSprite, tvMomTotal;
-    // 4. Nakuru Views
+    //  Nakuru Views
     TextView tvNakCoke, tvNakFanta, tvNakSprite, tvNakTotal;
-    // 5. Eldoret Views
+    //  Eldoret Views
     TextView tvEldCoke, tvEldFanta, tvEldSprite, tvEldTotal;
 
     TextView tvGrandTotal;
@@ -40,6 +40,7 @@ public class activity_report extends AppCompatActivity {
     // String to hold the text data for the file
     String reportData = "";
 
+    //initialization
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +112,7 @@ public class activity_report extends AppCompatActivity {
         int eldCoke = 0, eldFanta = 0, eldSprite = 0;
 
         int grandTotal = 0;
-
+//loops through every single transaction document from the database
         for (DocumentSnapshot doc : documents) {
             Long amountL = doc.getLong("amount");
             String product = doc.getString("product");

@@ -55,9 +55,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // -----------------------------------------------------------
+
         // ADMIN BUTTONS
-        // -----------------------------------------------------------
 
         // 1. Restock Button
         Button btnRestock = findViewById(R.id.btn_restock);
@@ -91,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // -----------------------------------------------------------
+
         // CUSTOMER BUTTONS
-        // -----------------------------------------------------------
+
 
         Button btnNairobi = findViewById(R.id.btn_shop_nairobi);
         Button btnKisumu = findViewById(R.id.btn_shop_kisumu);
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     // Helper: Opens the Shopping page and tells it which branch to load
     private void openShopping(String branchId) {
         Intent intent = new Intent(MainActivity.this, activity_shopping.class);
-        intent.putExtra("BRANCH_ID", branchId);
+        intent.putExtra("BRANCH_ID", branchId); // attaches data to that intent
         startActivity(intent);
     }
 }

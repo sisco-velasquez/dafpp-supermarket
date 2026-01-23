@@ -24,7 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
-
+// declare variables that connect the logic to user interface
     TextInputEditText editTextEmail, editTextPassword;
     Button buttonLogin;
     FirebaseAuth mAuth;
@@ -40,13 +40,13 @@ public class Login extends AppCompatActivity {
             checkRoleAndRedirect(currentUser.getUid());
         }
     }
-
+// initialization(connects the java variables to their IDs in the user interface
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-
+// authorization and database storage
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
